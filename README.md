@@ -9,6 +9,7 @@ This project is the Phase-1 foundation for a future smart agritourism platform t
 1️⃣ Install dependencies
 
 npm install
+
 2️⃣ Add environment variables
 
 Create a .env file in the root directory:
