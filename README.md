@@ -1,16 +1,23 @@
-# React + Vite
+# Agritourism Discovery Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple web application that helps users discover agritourism farms across India.
+It showcases farms, their locations, basic facilities, and a simple safety status, all in a clean and visually friendly interface.
 
-Currently, two official plugins are available:
+This project is the Phase-1 foundation for a future smart agritourism platform that will integrate data and AI-based safety insights.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# How to Run the Project
+1️⃣ Install dependencies
 
-## React Compiler
+npm install
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+2️⃣ Add environment variables
 
-## Expanding the ESLint configuration
+Create a .env file in the root directory:
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+3️⃣ Start the development server
+npm run dev
+
+Open your browser at:
+http://localhost:5173
