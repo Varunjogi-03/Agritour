@@ -1,9 +1,11 @@
 import { Link, useLocation } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect } from "react"
+import { supabase } from "../services/supabaseClient"
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false)
+    const [user, setUser] = useState(null)
     const location = useLocation()
 
     useEffect(() => {
@@ -11,7 +13,21 @@ export default function Navbar() {
             setIsScrolled(window.scrollY > 20)
         }
         window.addEventListener("scroll", handleScroll)
-        return () => window.removeEventListener("scroll", handleScroll)
+
+        // Get initial session
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUser(session?.user ?? null)
+        })
+
+        // Listen for auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null)
+        })
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll)
+            subscription.unsubscribe()
+        }
     }, [])
 
     const navLinks = [
@@ -27,8 +43,8 @@ export default function Navbar() {
             animate={{ y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-                    ? "py-3 bg-white/80 backdrop-blur-lg shadow-lg border-b border-green-100"
-                    : "py-6 bg-transparent"
+                ? "py-3 bg-white/80 backdrop-blur-lg shadow-lg border-b border-green-100"
+                : "py-6 bg-transparent"
                 }`}
         >
             <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
@@ -73,13 +89,32 @@ export default function Navbar() {
 
                 {/* CTA / Action Button */}
                 <div className="flex items-center gap-4">
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="bg-green-700 hover:bg-green-800 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md transition-all border border-green-600/50"
-                    >
-                        Sign In
-                    </motion.button>
+                    {user ? (
+                        <Link to="/profile">
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="flex items-center gap-3 bg-white/50 backdrop-blur-md px-4 py-2 rounded-full border border-green-100 hover:border-green-300 transition-all cursor-pointer"
+                            >
+                                <div className="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center text-white font-bold text-xs uppercase shadow-inner">
+                                    {user.email[0]}
+                                </div>
+                                {/* <span className="text-sm font-bold text-green-900 hidden sm:inline">
+                                    Profile
+                                </span> */}
+                            </motion.div>
+                        </Link>
+                    ) : (
+                        <Link to="/auth">
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="bg-green-700 hover:bg-green-800 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md transition-all border border-green-600/50"
+                            >
+                                Sign In
+                            </motion.button>
+                        </Link>
+                    )}
                 </div>
             </div>
         </motion.nav>
